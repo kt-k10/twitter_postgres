@@ -225,7 +225,6 @@ def insert_tweet(connection,tweet):
             VALUES(:id_users)
             ON CONFLICT DO NOTHING
                 ''')
-
         # insert the tweet
         sql=sqlalchemy.sql.text(f'''
             INSERT INTO tweets (
