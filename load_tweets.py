@@ -293,7 +293,7 @@ def insert_tweet(connection,tweet):
             'place_name':remove_nulls(place_name),
             'geo':None
 
-            }
+            })
 
         ########################################
         # insert into the tweet_urls table
