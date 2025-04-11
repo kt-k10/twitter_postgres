@@ -89,7 +89,7 @@ def insert_tweet(connection,tweet):
     You'll need to add appropriate SQL insert statements to get it to work.
     '''
 
-   sql = sqlalchemy.sql.text('''
+    sql = sqlalchemy.sql.text('''
         SELECT id_tweets 
         FROM tweets
         WHERE id_tweets = :id_tweets
