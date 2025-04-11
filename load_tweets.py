@@ -220,7 +220,7 @@ def insert_tweet(connection,tweet):
         # This means that every "in_reply_to_user_id" field must reference a valid entry in the users table.
         # If the id is not in the users table, then you'll need to add it in an "unhydrated" form.
         if tweet.get('in_reply_to_user_id',None) is not None:
-            sql=sqlalchemy.sql.text('''
+            insert_user_sql =sqlalchemy.sql.text('''
             INSERT INTO users(id_users)
             VALUES(:id_users)
             ON CONFLICT DO NOTHING
