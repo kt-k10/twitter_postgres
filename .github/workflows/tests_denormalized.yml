@@ -9,10 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: setup python
+
+    - name: Setup Python
       run: |
         pip3 install -r requirements.txt
-    - name: docker
+
+    - name: Set up Docker and run tests
       run: |
         git submodule init
         git submodule update
@@ -21,6 +23,13 @@ jobs:
         sleep 20
         sh load_tweets.sh
         docker compose exec -T pg_denormalized ./run_tests.sh
+
+    - name: Collect Test Results
+      run: |
+        docker compose exec -T pg_denormalized pytest --maxfail=1 --disable-warnings --junitxml=test-results.xml
+
+    - name: Upload Test Results to GitHub Actions
+      uses: actions/upload-artifact@v2
       with:
         name: test-results
         path: test-results.xml
