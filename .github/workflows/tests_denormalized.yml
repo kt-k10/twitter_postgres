@@ -1,18 +1,22 @@
 name: tests_denormalized
+
 on:
   push:
     branches: ['*']
   pull_request:
     branches: ['*']
+
 jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: setup python
+
+    - name: Setup Python
       run: |
         pip3 install -r requirements.txt
-    - name: docker
+
+    - name: Set up Docker and run tests
       run: |
         git submodule init
         git submodule update
@@ -21,3 +25,19 @@ jobs:
         sleep 20
         sh load_tweets.sh
         docker compose exec -T pg_denormalized ./run_tests.sh
+
+    - name: Collect Test Results
+      run: |
+        # Ensure tests produce results (JUnit format)
+        docker compose exec -T pg_denormalized pytest --maxfail=1 --disable-warnings --junitxml=test-results.xml
+
+    - name: Upload Test Results to GitHub Actions
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-results
+        path: test-results.xml
+
+    - name: Generate Test Report in Actions
+      uses: dorny/test-reporter-action@v1
+      with:
+        file: test-results.xml
